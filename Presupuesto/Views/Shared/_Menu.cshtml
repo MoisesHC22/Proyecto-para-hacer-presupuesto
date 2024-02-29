@@ -1,0 +1,95 @@
+﻿
+<link rel="stylesheet" href="~/css/Menu.css" asp-append-version="true" />
+
+<nav class="sideBar">
+    <div class="Logo">
+        <i class="fa-solid fa-cube"></i>
+    </div>
+
+    <ul class="navLinks">
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-mattress-pillow link-icon"></i>
+                <span class="link-text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-table-columns link-icon"></i>
+                <span class="link-text">Tabla</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-coins link-icon"></i>
+                <span class="link-text">Presupuesto</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-list link-icon"></i>
+                <span class="link-text">Categorias</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-money-bill-1-wave link-icon"></i>
+                <span class="link-text">Transacciones</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-bell link-icon"></i>
+                <span class="link-text">Notificaciones</span>
+            </a>
+        </li>
+    </ul>
+
+
+    <p class="text-muted">Entrada</p>
+    <ul class="navLinks">
+        <li>
+            <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-user link-icon"></i>
+                <span class="link-text">Perfil</span>
+            </a>
+        </li>
+
+
+        <li>
+            <a class="link" asp-area="" asp-controller="Account" asp-action="SingIn">
+                <i class="fa-solid fa-right-to-bracket link-icon"></i>
+                <span class="link-text">SingIn</span>
+            </a>
+        </li>
+        <li>
+             <a class="link" asp-area="" asp-controller="" asp-action="">
+                <i class="fa-solid fa-user-plus link-icon"></i>
+                <span class="link-text">Registrate</span>
+             </a>
+        </li>
+
+        <li>
+            <a href="#" class="link" data-theme>
+                <i class="fa-solid fa-toggle-off link-icon"></i>
+                <span class="link-text">Themes</span>
+            </a>
+        </li>
+
+    </ul>
+
+   <a class="Exit" asp-area="" asp-controller="" asp-action="">
+       <div class="contendorParaSalir">
+            <h4>SALIR</h4>
+       </div>    
+   </a>
+
+</nav>
+
+
+
+<script src="~/js/Menu.js"></script>

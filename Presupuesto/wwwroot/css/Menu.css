@@ -1,0 +1,171 @@
+﻿::selection {
+    background: #05bc55;
+    color: #fff;
+}
+
+.sideBar {
+    z-index: 1000;
+    background-color: #fff;
+    position: fixed;
+    top: 40px;
+    left: 25px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 20px #00000030;
+    border-radius: 10px;
+
+    height: 90vh;
+    width: 60px;
+
+    display: flex;
+    flex-direction: column;
+
+    transition: width 0.2s ease;
+}
+
+    .sideBar.dark {
+        background: #141414;
+        color: #eee;
+    }
+    
+    body.dark {
+    background: #222;
+    color: #eee;
+    }
+
+    .sideBar.dark * .link-icon {
+        color: #ccc;
+    }
+
+.Logo {
+    margin-left: -22px;
+    color: #222;
+    font-size: 30px;
+    margin-bottom: 25px;
+    background: #eee;
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navLinks {
+    width: 100%;
+    margin-left: -58px;
+
+}
+
+ul {
+    list-style-type: none;
+}
+
+li a {
+    text-decoration: none;
+}
+
+.navLinks li a {
+    padding: 15px;
+}
+
+    .navLinks:last-child {
+        margin-top: auto;
+        margin-bottom: 100px;
+    }
+
+.link {
+    display: flex;
+    height: 40px;
+}
+
+
+.link-text {
+    color: #6c757d;
+    font-weight: 500;
+    font-size: 15px;
+    margin-left: 10px;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: all 0.2s ease;
+}
+
+.link-icon {
+    color: #222;
+    flex-basis: 10px;
+    font-size: 20px;
+}
+
+.text-muted {
+    color: #ccc;
+    font-size: 15px;
+    padding: 5px 0;
+    transform: scaleX(0);
+}
+
+.Exit {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scaleX(0);
+}
+
+.contendorParaSalir {
+    background-color: #EC4848;
+    width: 150px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+    .contendorParaSalir:hover {
+        background-color: black;
+        color: white;
+    }
+
+.sideBar.dark .contendorParaSalir:hover {
+    background-color: white;
+    color: black;
+}
+
+.navLinks li:hover {
+    background: #222;
+    width: 155px;
+    border-radius: 10px;
+}
+
+    .navLinks li:hover .link > * {
+        color: #808080;
+    }
+
+
+
+
+
+
+.sideBar:hover .link-text {
+    transform: scaleX(1);
+}
+
+.sideBar:hover .text-muted {
+    transform: scaleX(1);
+}
+
+.sideBar:hover {
+    width: 170px;
+    align-items: center;
+}
+
+    .sideBar:hover .Logo {
+        margin-left: 0px;
+    }
+
+    .sideBar:hover .navLinks {
+        margin-left: -110px;
+    }
+
+    .sideBar:hover .Exit {
+        transform: scaleX(1);
+    }

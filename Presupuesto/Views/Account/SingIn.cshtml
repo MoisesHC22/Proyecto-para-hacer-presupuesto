@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "login";
+}
+
+<link rel="stylesheet" href="/css/SingIn.css" asp-append-version="true" />
+
+
+
+<div class="CentrarLogin">
+    <form asp-controller="" asp-action="" method="post">
+
+        <div class="ContenedorLogin">
+            <div class="filtro">
+                <div class="Login">
+
+                    <h1 id="TituloLogin">Login</h1>
+                    <div class="centrarItems">
+                        <input id="Requisito" type="text" class="form-control" placeholder="Ingresa tu correo" />
+
+                        <input id="Requisito" type="password" class="form-control"  placeholder="Ingresa tu contraseña" />
+
+
+                        <button type="submit" id="button">Iniciar sesión</button>
+
+                        <div><a asp-action="CrearCuenta" asp-controller="Home" id="NoTengoCuenta">No tengo cuenta</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
