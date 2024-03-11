@@ -31,7 +31,7 @@ builder.Services.AddControllers(options =>
 
 ///configuramos todos los servicios en el middleware
 builder.Services.AddTransient<ITiposCuentasServices, TiposCuentasServices>();
-
+builder.Services.AddTransient<IUsuariosServices, ServiciosUsuarios>();
 
 var app = builder.Build();
 
