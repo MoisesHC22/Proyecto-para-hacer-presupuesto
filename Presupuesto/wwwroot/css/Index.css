@@ -1,0 +1,26 @@
+﻿.Centrar {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerTable {
+    width: 600px;
+}
+.btnEditar {
+    width: 100px;
+    height: 40px;
+    background-color: rebeccapurple;
+    color: white;
+    border-radius: 10px;
+}
+
+.btnEliminar {
+    width: 100px;
+    height: 40px;
+    background-color: darkred;
+    color: white;
+    border-radius: 10px
+}

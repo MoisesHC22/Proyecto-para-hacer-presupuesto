@@ -1,0 +1,162 @@
+﻿@model TipoCuenta
+
+<link rel="stylesheet" href="~/css/Index.css" asp-append-version="true" />
+
+<h1>Lista de tipos de cuentas</h1>
+
+<div>
+   
+
+    @if (Model != null)
+    {
+      <h6>Ingresa el nuevo nombre</h6>
+      <input id="txtNombreEditar" placeholder="" value="@Model.Nombre" />
+      <button id="btnGuardarEditar" data-id="@Model.Id">Editar</button>
+    }
+    else
+    {
+        <h6>Agregar un nuevo tipo de cuenta</h6>
+        <input id="txtNombre" placeholder="Ingresa nombre del tipo de cuenta" />
+       <button id="btnCrear"> Guardar </button >
+    }
+
+</div>
+
+<div class="Centrar">
+    <div class="containerTable">
+        <table id="TiposCuentas" class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h6>Nombre</h6>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+
+    $('#btnCrear').click(function () {
+        var nombre = $('#txtNombre').val();
+        crearTipoCuenta(nombre);
+    });
+
+    function crearTipoCuenta(nombre) {
+        $.ajax({
+            type: "POST",
+            url: '/TiposCuentas/Create',
+            data: { Nombre: nombre },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('Error al crear el tipo de cuenta.');
+            }
+        });
+    }
+
+    $('#btnGuardarEditar').click(function () {
+        var nombre = $('#txtNombreEditar').val();
+        btnGuardar(nombre);
+    });
+
+    function crearTipoCuenta(nombre) {
+        $.ajax({
+            type: "POST",
+            url: '/TiposCuentas/Editar',
+            data: { Nombre: nombre, Id: Id },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('Error al editar el tipo de cuenta.');
+            }
+        });
+    }
+
+
+</script>
+
+@section scripts
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
+
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#TiposCuentas').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("ObtenerLista", "TiposCuentas")",
+                    "type": "POST",
+                    "dataType": "json"
+                },
+                "pageLength": 10,
+                "responsivePriority": 1,
+                "columns": [
+                    { "data": "nombre" },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> <button class='btnEditar' data-id='" + row.id + "'>Editar</button> "
+                            ;
+                        },
+                        "orderable": false
+                    }
+                ],
+            });
+        });
+
+        $('#TiposCuentas tbody').on('click', '.btnEliminar', function () {
+            var id = $(this).data('id');
+            eliminarTipoCuenta(id);
+        });
+
+        function eliminarTipoCuenta(id) {
+            $.ajax({
+                type: "POST",
+                url: '/TiposCuentas/Eliminar',
+                data: { Id: id },
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert('Error al eliminar el tipo de cuenta.');
+                }
+            });
+        }
+
+        $('#TiposCuentas tbody').on('click', '.btnEditar', function () {
+            var id = $(this).data('id');
+            editarTipoCuenta(id);
+        });
+
+        function editarTipoCuenta(id) {
+            $.ajax({
+                type: "POST",
+                url: '/TiposCuentas/ObtenerDatosEditar',
+                data: { Id: id },
+                success: function () {
+                   
+                },
+                error: function () {
+                    alert('Error un error.');
+                }
+            });
+        }
+
+
+    </script>
+
+
+}

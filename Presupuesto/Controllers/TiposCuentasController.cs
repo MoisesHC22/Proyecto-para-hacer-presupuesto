@@ -20,73 +20,92 @@ namespace Presupuesto.Controllers
             _usuariosServices = usuariosServices;
         }
 
-        [ServiceFilter(typeof(GlobalExceptionFilter))]
-        public IActionResult Create()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
 
+        public string draw = "";
+        public string start = "";
+        public string length = "";
+        public int pageSize, skip, recordsTotal;
+
+
         [HttpPost]
-        public async Task<IActionResult> Create(TipoCuenta tipoCuenta)
+        public async Task<IActionResult> ObtenerLista()
         {
-            if (ModelState.IsValid)
-            {
-                return View(tipoCuenta);
-            }
-            var ExistAccount = await
-                _tiposCuentasServices.Existe(tipoCuenta.Nombre, tipoCuenta.UduarioId);
-            if (ExistAccount)
-            {
-                ModelState.AddModelError(nameof(tipoCuenta.Nombre),
-                    $"El bombre {tipoCuenta} ya existe.");
-                return View(tipoCuenta);
-            }
+            var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+            var length = HttpContext.Request.Form["length"].FirstOrDefault();
+            var start = HttpContext.Request.Form["start"].FirstOrDefault();
 
-            ///hardcodeamos el usuario con su id
-            tipoCuenta.UduarioId = _usuariosServices.ObtenerUsuariosId();
+            pageSize = length != null ? Convert.ToInt32(length) : 0;
+            skip = start != null ? Convert.ToInt32(start) : 0;
+            recordsTotal = 0;
 
-            ///_tiposCuentasServices.Crear(tipoCuenta);
-            ///insertamos el objeto del tipo tipoCuenta
-            await _tiposCuentasServices.CrearAsync(tipoCuenta);
 
+            var usuarioId = _usuariosServices.ObtenerUsuariosId();
+            var tiposCuentas = await _tiposCuentasServices.Obtener(usuarioId);
+
+            recordsTotal = tiposCuentas.Count();
+            tiposCuentas = tiposCuentas.Skip(skip).Take(pageSize).ToList();
+
+
+
+            return Json(new{
+                draw = draw,
+                recordsTotal = recordsTotal,
+                recordsFiltered = recordsTotal,
+                data = tiposCuentas
+            });
+        
+
+        
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Eliminar(int Id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"DELETE FROM TiposCuentas WHERE Id = @Id", new { Id });
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(string nombre)
         {
-            var usuarioId = _usuariosServices.ObtenerUsuariosId();
-            var Exist = await _tiposCuentasServices.Existe(nombre, usuarioId);
-            if (Exist)
+            try
             {
-                return Json($"El nombre {nombre} ya existe");
+                var tipoCuenta = new TipoCuenta { Nombre = nombre };
+                await _tiposCuentasServices.CrearAsync(tipoCuenta);
+                return RedirectToAction("Index");
             }
-            return Json(true);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
-        public async Task<IActionResult> Index()
+
+        [HttpPost]
+        public async Task<IActionResult> ObtenerDatosEditar(int Id) 
         {
-            var usuarioId = _usuariosServices.ObtenerUsuariosId();
-            var tiposCuentas = await _tiposCuentasServices.Obtener(usuarioId);
-            return View(tiposCuentas);
+            var TiposCuentas = await _tiposCuentasServices.ObtenerInfCuenta(Id);
+            return View(TiposCuentas);
+
         }
 
-        public async Task Actualizar(TipoCuenta tipoCuenta)
+        [HttpPost]
+        public async Task<IActionResult> Editar(string Nombre, int Id)
         {
-            using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync(@"UPDATE TipoCuentas SET
-                     Nombre=@Nombre WHERE Id = @Id", tipoCuenta);
+            var tipoCuenta = new TipoCuenta { Nombre = Nombre, Id = Id };
+            await _tiposCuentasServices.EditarAsync(tipoCuenta);
+            return RedirectToAction("Index");
         }
+        
 
-        public async Task<TipoCuenta> ObtenerPorId(int id, int usuarioId)
-        {
-            using var connection = new SqlConnection(connectionString);
-            return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT Id,Nombre,
-                              Orden FROM TiposCuentas WHERE Id=@Id AND UsuarioId=@UsuarioId",
-                   new { id, usuarioId });
-        }
-
-
- 
     }
 }
