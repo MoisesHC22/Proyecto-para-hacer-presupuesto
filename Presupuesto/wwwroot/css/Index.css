@@ -1,4 +1,13 @@
-﻿.Centrar {
+﻿
+.Titulo {
+    text-align: center;
+}
+
+#txtNombre {
+    width: 300px;
+}
+
+.Centrar {
     margin-top: 50px;
     display: flex;
     flex-direction: column;

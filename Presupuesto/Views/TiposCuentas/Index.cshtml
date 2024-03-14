@@ -1,25 +1,17 @@
-﻿@model TipoCuenta
+﻿@model List<TipoCuenta>
 
 <link rel="stylesheet" href="~/css/Index.css" asp-append-version="true" />
 
-<h1>Lista de tipos de cuentas</h1>
+<h1 class="Titulo">Lista de tipos de cuentas</h1>
 
-<div>
-   
 
-    @if (Model != null)
-    {
-      <h6>Ingresa el nuevo nombre</h6>
-      <input id="txtNombreEditar" placeholder="" value="@Model.Nombre" />
-      <button id="btnGuardarEditar" data-id="@Model.Id">Editar</button>
-    }
-    else
-    {
-        <h6>Agregar un nuevo tipo de cuenta</h6>
-        <input id="txtNombre" placeholder="Ingresa nombre del tipo de cuenta" />
-       <button id="btnCrear"> Guardar </button >
-    }
 
+<div class="Centrar">
+    <h6>Agregar un nuevo tipo de cuenta</h6>
+    <div>
+       <input id="txtNombre" placeholder="Ingresa nombre del tipo de cuenta" />
+       <button id="btnCrear"> Guardar </button>
+    </div>
 </div>
 
 <div class="Centrar">
@@ -68,20 +60,6 @@
         btnGuardar(nombre);
     });
 
-    function crearTipoCuenta(nombre) {
-        $.ajax({
-            type: "POST",
-            url: '/TiposCuentas/Editar',
-            data: { Nombre: nombre, Id: Id },
-            success: function () {
-                location.reload();
-            },
-            error: function () {
-                alert('Error al editar el tipo de cuenta.');
-            }
-        });
-    }
-
 
 </script>
 
@@ -108,7 +86,7 @@
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> <button class='btnEditar' data-id='" + row.id + "'>Editar</button> "
+                            return "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> "
                             ;
                         },
                         "orderable": false
