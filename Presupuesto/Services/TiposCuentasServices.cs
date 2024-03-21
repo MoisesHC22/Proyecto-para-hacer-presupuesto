@@ -71,7 +71,6 @@ namespace Presupuesto.Services
             return await connection.ExecuteScalarAsync<int>(@"SELECT COUNT(*) FROM TiposCuentas");
         }
 
-
         public async Task EditarAsync(TipoCuenta tipoCuenta)
         {
             using var connection = new SqlConnection(connectionString);
@@ -82,6 +81,30 @@ namespace Presupuesto.Services
         }
 
 
+
+        //Funciones
+
+        public async Task<TipoCuenta> ObtenerPorId(int id, int usuarioId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT Id, Nombre, Orden
+                     FROM TiposCuentas WHERE Id=@Id AND UsuarioId=@UsuarioId", new { id,usuarioId });
+        }
+
+        public async Task Actualizar(TipoCuenta tipoCuenta)
+        {
+            using var connection = new SqlConnection( connectionString);
+            await connection.ExecuteAsync(@"UPDATE TiposCuentas SET
+                     Nombre=@Nombre WHERE Id = @Id", tipoCuenta);
+        }
+
+
+
+        public async Task Borrar(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync("DELETE TiposCuentas WHERE Id=@Id", new { id });
+        }
 
     }
 }

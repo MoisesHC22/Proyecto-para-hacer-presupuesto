@@ -13,6 +13,8 @@ namespace Presupuesto.Infraestructura
 
         Task<IEnumerable<TipoCuenta>> ObtenerInfCuenta(int Id);
         Task EditarAsync(TipoCuenta tipoCuenta);
-
+        Task Actualizar(TipoCuenta tipoCuenta);
+        Task Borrar(int id);
+        Task<TipoCuenta> ObtenerPorId(int id, int usuarioId);
     }
 }

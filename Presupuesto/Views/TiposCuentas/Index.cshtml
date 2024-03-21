@@ -86,7 +86,7 @@
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> "
+                            return "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> <button class='btnEditar' data-id='" + row.id + "'>Actualizar</button>"
                             ;
                         },
                         "orderable": false
@@ -103,8 +103,8 @@
         function eliminarTipoCuenta(id) {
             $.ajax({
                 type: "POST",
-                url: '/TiposCuentas/Eliminar',
-                data: { Id: id },
+                url: '/TiposCuentas/EliminarTipoCuenta',
+                data: { id: id },
                 success: function () {
                     location.reload();
                 },
@@ -114,24 +114,29 @@
             });
         }
 
-        $('#TiposCuentas tbody').on('click', '.btnEditar', function () {
+        // $('#TiposCuentas tbody').on('click', '.btnEditar', function () {
+        //     var id = $(this).data('id');
+        //     editarTipoCuenta(id);
+        // });
+
+        $('#TiposCuentas').on('click', '.btnEditar', function () {
             var id = $(this).data('id');
-            editarTipoCuenta(id);
+            window.location.href = "@Url.Action("Editar", "TiposCuentas")/" + id;
         });
 
-        function editarTipoCuenta(id) {
-            $.ajax({
-                type: "POST",
-                url: '/TiposCuentas/ObtenerDatosEditar',
-                data: { Id: id },
-                success: function () {
-                   
-                },
-                error: function () {
-                    alert('Error un error.');
-                }
-            });
-        }
+        // function editarTipoCuenta(id) {
+        //     $.ajax({
+        //         type: "GET",
+        //         url: '/TiposCuentas/Editar',
+        //         data: { id: id },
+        //         success: function () {
+        //             location.reload();
+        //         },
+        //         error: function () {
+        //             alert('Error un error.');
+        //         }
+        //     });
+        // }
 
 
     </script>

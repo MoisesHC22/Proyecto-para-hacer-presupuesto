@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Presupuesto.Filters;
 using Presupuesto.Infraestructura;
 using Presupuesto.Models;
+using System.Runtime.CompilerServices;
 
 namespace Presupuesto.Controllers
 {
@@ -63,7 +64,6 @@ namespace Presupuesto.Controllers
         }
 
 
-
         [HttpPost]
         public async Task<IActionResult> Eliminar(int Id)
         {
@@ -71,7 +71,6 @@ namespace Presupuesto.Controllers
             await connection.ExecuteAsync(@"DELETE FROM TiposCuentas WHERE Id = @Id", new { Id });
             return RedirectToAction("Index");
         }
-
 
 
         [HttpPost]
@@ -89,23 +88,71 @@ namespace Presupuesto.Controllers
             }
         }
 
+        #region Actualizar 
 
-        [HttpPost]
-        public async Task<IActionResult> ObtenerDatosEditar(int Id) 
+        [HttpGet]
+        [ServiceFilter(typeof(GlobalExceptionFilter))]
+        public async Task<ActionResult> Editar(int id)
         {
-            var TiposCuentas = await _tiposCuentasServices.ObtenerInfCuenta(Id);
-            return View(TiposCuentas);
+            var usuarioId = _usuariosServices.ObtenerUsuariosId();
+            var tipoCuenta = await _tiposCuentasServices.ObtenerPorId(id, usuarioId);
+            if (tipoCuenta is null)
+            {
+                RedirectToAction("NoEncontrado","Home");
+            }
 
+            return View(tipoCuenta);   
         }
 
+
+
         [HttpPost]
-        public async Task<IActionResult> Editar(string Nombre, int Id)
+        [ServiceFilter(typeof(GlobalExceptionFilter))]
+        public async Task<ActionResult> Editar(TipoCuenta tipoCuenta)
         {
-            var tipoCuenta = new TipoCuenta { Nombre = Nombre, Id = Id };
-            await _tiposCuentasServices.EditarAsync(tipoCuenta);
+            //Obtenemos el identificacdor de usuario
+            var usuarioId = _usuariosServices.ObtenerUsuariosId();
+            var tipoCuentaExiste = await _tiposCuentasServices.ObtenerPorId(tipoCuenta.Id, usuarioId);
+            if (tipoCuentaExiste is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _tiposCuentasServices.Actualizar(tipoCuenta);
             return RedirectToAction("Index");
         }
-        
+
+        #endregion
+
+
+        #region Eliminar 
+        [ServiceFilter(typeof(GlobalExceptionFilter))]
+        public async Task<ActionResult> EliminarR(int id)
+        {
+            var usuarioId = _usuariosServices.ObtenerUsuariosId();
+            var tipoCuenta = await _tiposCuentasServices.ObtenerPorId(id, usuarioId);
+            if (tipoCuenta is null)
+            {
+                RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(tipoCuenta);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EliminarTipoCuenta(int Id)
+        {
+            //Obtenemos el identificacdor de usuario
+            var usuarioId = _usuariosServices.ObtenerUsuariosId();
+            var tipoCuenta = await _tiposCuentasServices.ObtenerPorId(Id, usuarioId);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _tiposCuentasServices.Borrar(Id);
+            return RedirectToAction("Index");
+        }
+
+        #endregion
+
 
     }
 }

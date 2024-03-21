@@ -1,0 +1,18 @@
+﻿@model Presupuesto.Models.TipoCuenta
+
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Editar</h1>
+
+@using(Html.BeginForm("Editar", "TiposCuentas", FormMethod.Post))
+{
+<div>
+    @Html.LabelFor(model => model.Nombre)
+    @Html.EditorFor(model => model.Nombre)
+</div>
+<button data-id="@Model.Id" type="submit">Guardar Cambios</button>
+}
+
