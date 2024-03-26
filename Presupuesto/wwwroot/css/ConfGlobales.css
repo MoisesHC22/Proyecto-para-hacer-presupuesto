@@ -1,0 +1,16 @@
+﻿
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans");
+
+.Centrar {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Title {
+    margin: 30px;
+    font-family: "Fira Sans", Helvetica, Arial, sans-serif;
+}
+

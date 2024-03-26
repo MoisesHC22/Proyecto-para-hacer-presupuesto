@@ -1,5 +1,6 @@
 ﻿
 .Titulo {
+    margin:90px 0 10px 0;
     text-align: center;
 }
 
@@ -7,29 +8,35 @@
     width: 300px;
 }
 
-.Centrar {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 .containerTable {
     width: 600px;
 }
+
+#btnCrear {
+    width: 100px;
+    height: 30px;
+    background-color: #2970CA;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+
 .btnEditar {
     width: 100px;
     height: 40px;
-    background-color: rebeccapurple;
+    background-color: #006494;
     color: white;
+    border: none;
     border-radius: 10px;
 }
 
 .btnEliminar {
+    margin-left: 5px;
     width: 100px;
     height: 40px;
-    background-color: darkred;
+    background-color: #13293D;
     color: white;
+    border: none;
     border-radius: 10px
 }

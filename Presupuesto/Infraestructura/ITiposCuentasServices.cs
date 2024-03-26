@@ -8,7 +8,7 @@ namespace Presupuesto.Infraestructura
         Task<bool> Existe(string nombre);
         Task<IEnumerable<TipoCuenta>> Obtener(int usuarioId);
         Task<IEnumerable<TipoCuenta>> TodosLosRegistros();
-        Task<IEnumerable<TipoCuenta>> TodosLosRegistrosPaginados(int Start,int length);
+        Task<IEnumerable<TipoCuenta>> TodosLosRegistrosPaginados(int Skip,int take);
         Task<int> ObtenerTotalRegistros();
 
         Task<IEnumerable<TipoCuenta>> ObtenerInfCuenta(int Id);

@@ -86,7 +86,7 @@
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> <button class='btnEditar' data-id='" + row.id + "'>Actualizar</button>"
+                            return "<button class='btnEditar' data-id='" + row.id + "'>Actualizar</button><button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> "
                             ;
                         },
                         "orderable": false
@@ -114,30 +114,10 @@
             });
         }
 
-        // $('#TiposCuentas tbody').on('click', '.btnEditar', function () {
-        //     var id = $(this).data('id');
-        //     editarTipoCuenta(id);
-        // });
-
         $('#TiposCuentas').on('click', '.btnEditar', function () {
             var id = $(this).data('id');
             window.location.href = "@Url.Action("Editar", "TiposCuentas")/" + id;
         });
-
-        // function editarTipoCuenta(id) {
-        //     $.ajax({
-        //         type: "GET",
-        //         url: '/TiposCuentas/Editar',
-        //         data: { id: id },
-        //         success: function () {
-        //             location.reload();
-        //         },
-        //         error: function () {
-        //             alert('Error un error.');
-        //         }
-        //     });
-        // }
-
 
     </script>
 

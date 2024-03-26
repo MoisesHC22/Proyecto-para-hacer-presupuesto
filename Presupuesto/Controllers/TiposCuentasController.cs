@@ -26,11 +26,6 @@ namespace Presupuesto.Controllers
             return View();
         }
 
-        public string draw = "";
-        public string start = "";
-        public string length = "";
-        public int pageSize, skip, recordsTotal;
-
 
         [HttpPost]
         public async Task<IActionResult> ObtenerLista()
@@ -39,17 +34,13 @@ namespace Presupuesto.Controllers
             var length = HttpContext.Request.Form["length"].FirstOrDefault();
             var start = HttpContext.Request.Form["start"].FirstOrDefault();
 
-            pageSize = length != null ? Convert.ToInt32(length) : 0;
-            skip = start != null ? Convert.ToInt32(start) : 0;
-            recordsTotal = 0;
+            var pageSize = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var recordsTotal = 0;
 
+            var tiposCuentas = await _tiposCuentasServices.TodosLosRegistrosPaginados(skip, pageSize);
 
-            var usuarioId = _usuariosServices.ObtenerUsuariosId();
-            var tiposCuentas = await _tiposCuentasServices.Obtener(usuarioId);
-
-            recordsTotal = tiposCuentas.Count();
-            tiposCuentas = tiposCuentas.Skip(skip).Take(pageSize).ToList();
-
+            recordsTotal = await _tiposCuentasServices.ObtenerTotalRegistros();
 
 
             return Json(new{
@@ -59,17 +50,6 @@ namespace Presupuesto.Controllers
                 data = tiposCuentas
             });
         
-
-        
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Eliminar(int Id)
-        {
-            using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync(@"DELETE FROM TiposCuentas WHERE Id = @Id", new { Id });
-            return RedirectToAction("Index");
         }
 
 

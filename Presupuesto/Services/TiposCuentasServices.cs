@@ -58,11 +58,11 @@ namespace Presupuesto.Services
             return await connection.QueryAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas", new { });
         }
 
-        public async Task<IEnumerable<TipoCuenta>> TodosLosRegistrosPaginados(int start, int length)
+        public async Task<IEnumerable<TipoCuenta>> TodosLosRegistrosPaginados(int skip, int take)
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas ORDER BY Id
-                    OFFSET @Start ROWS FETCH NEXT @Length ROWS ONLY", new { Start = start * length, Length = length });
+                    OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY", new { Skip = skip, Take = take });
         }
 
         public async Task<int> ObtenerTotalRegistros()
