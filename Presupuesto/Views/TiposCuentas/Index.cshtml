@@ -1,18 +1,30 @@
-﻿@model List<TipoCuenta>
+﻿@model Presupuesto.Models.TipoCuenta
+
+@{
+    ViewData["Title"] = "Tipos Cuenta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <link rel="stylesheet" href="~/css/Index.css" asp-append-version="true" />
 
 <h1 class="Titulo">Lista de tipos de cuentas</h1>
 
-
-
+@using (Html.BeginForm("Create", "TiposCuentas", FormMethod.Post))
+{
 <div class="Centrar">
-    <h6>Agregar un nuevo tipo de cuenta</h6>
+    <h4 id="Subtitulo">Agregar un nuevo tipo de cuenta</h4>
     <div>
-       <input id="txtNombre" placeholder="Ingresa nombre del tipo de cuenta" />
-       <button id="btnCrear"> Guardar </button>
+       <label id="CampoRequerimiento">Ingresa nombre: </label>
+            @Html.EditorFor(model => model.Nombre)
+            <button id="btnCrear" type="submit"> Guardar </button>
+
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "Error" })
+      
     </div>
 </div>
+}
+
+
 
 <div class="Centrar">
     <div class="containerTable">
@@ -34,34 +46,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<script>
 
-    $('#btnCrear').click(function () {
-        var nombre = $('#txtNombre').val();
-        crearTipoCuenta(nombre);
-    });
-
-    function crearTipoCuenta(nombre) {
-        $.ajax({
-            type: "POST",
-            url: '/TiposCuentas/Create',
-            data: { Nombre: nombre },
-            success: function () {
-                location.reload();
-            },
-            error: function () {
-                alert('Error al crear el tipo de cuenta.');
-            }
-        });
-    }
-
-    $('#btnGuardarEditar').click(function () {
-        var nombre = $('#txtNombreEditar').val();
-        btnGuardar(nombre);
-    });
-
-
-</script>
 
 @section scripts
 {
@@ -81,13 +66,16 @@
                 },
                 "pageLength": 10,
                 "responsivePriority": 1,
+                "searching": true,
                 "columns": [
                     { "data": "nombre" },
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return "<button class='btnEditar' data-id='" + row.id + "'>Actualizar</button><button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> "
-                            ;
+                            return " <div class='text-center'>" +
+                            "<button class='btnEditar' data-id='" + row.id + "'>Actualizar</button>"+
+                            "<button class='btnEliminar' data-id='" + row.id + "'>Eliminar</button> "+
+                            "</div>";
                         },
                         "orderable": false
                     }

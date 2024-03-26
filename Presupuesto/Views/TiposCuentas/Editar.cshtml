@@ -12,11 +12,12 @@
 {
 <div class="Centrar">
 
-        <h1 class="Title">Editar a @Model.Nombre</h1>
+        <h1 class="Title">Editar</h1>
 
         <div class="">
             @Html.LabelFor(model => model.Nombre)
             @Html.EditorFor(model => model.Nombre)
+            @Html.ValidationMessageFor(model => model.Nombre,"", new {@class = "Error" })
         </div>
         <button class="BtnGuardar" data-id="@Model.Id" type="submit">Guardar Cambios</button>
 

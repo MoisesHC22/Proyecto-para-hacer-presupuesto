@@ -10,13 +10,11 @@ namespace Presupuesto.Controllers
 {
     public class TiposCuentasController : Controller
     {
-        private readonly string connectionString;
         private readonly ITiposCuentasServices _tiposCuentasServices;
         private readonly IUsuariosServices _usuariosServices;
 
-        public TiposCuentasController(ITiposCuentasServices tiposCuentasService, IConfiguration configuration, IUsuariosServices usuariosServices)
+        public TiposCuentasController(ITiposCuentasServices tiposCuentasService, IUsuariosServices usuariosServices)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
             _tiposCuentasServices = tiposCuentasService;
             _usuariosServices = usuariosServices;
         }
@@ -34,14 +32,22 @@ namespace Presupuesto.Controllers
             var length = HttpContext.Request.Form["length"].FirstOrDefault();
             var start = HttpContext.Request.Form["start"].FirstOrDefault();
 
+            // Habilitamos la opción de buscar
+            var searchValue = HttpContext.Request.Form["search[value]"].FirstOrDefault();
+
             var pageSize = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
             var recordsTotal = 0;
 
+
+            /* Función de la anterior paginación
             var tiposCuentas = await _tiposCuentasServices.TodosLosRegistrosPaginados(skip, pageSize);
-
             recordsTotal = await _tiposCuentasServices.ObtenerTotalRegistros();
+            */
 
+            //Función para hacer la paginación con el filtro
+            var tiposCuentas = await _tiposCuentasServices.ObtenerListaFiltrada(skip, pageSize, searchValue);
+            recordsTotal = await _tiposCuentasServices.ObtenerTotalRegistrosFiltros(searchValue);
 
             return Json(new{
                 draw = draw,
@@ -52,21 +58,31 @@ namespace Presupuesto.Controllers
         
         }
 
+        #region Crear 
 
         [HttpPost]
-        public async Task<IActionResult> Create(string nombre)
+        [ServiceFilter(typeof(GlobalExceptionFilter))]
+        public async Task<IActionResult> Create(TipoCuenta tipoCuenta)
         {
-            try
+
+            if (!ModelState.IsValid)
             {
-                var tipoCuenta = new TipoCuenta { Nombre = nombre };
+                return View("Index",tipoCuenta);
+            }
+
+            var Existe = await _tiposCuentasServices.Existe(tipoCuenta.Nombre);
+
+            if (Existe)
+            {
+                ModelState.AddModelError(nameof(tipoCuenta.Nombre),
+                    $"El Nombre {tipoCuenta.Nombre} ya existe.");
+                return View("Index",tipoCuenta);
+            }
+
                 await _tiposCuentasServices.CrearAsync(tipoCuenta);
                 return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                return View("Error");
-            }
         }
+        #endregion
 
         #region Actualizar 
 
@@ -75,6 +91,7 @@ namespace Presupuesto.Controllers
         public async Task<ActionResult> Editar(int id)
         {
             var usuarioId = _usuariosServices.ObtenerUsuariosId();
+
             var tipoCuenta = await _tiposCuentasServices.ObtenerPorId(id, usuarioId);
             if (tipoCuenta is null)
             {
@@ -84,12 +101,15 @@ namespace Presupuesto.Controllers
             return View(tipoCuenta);   
         }
 
-
-
         [HttpPost]
         [ServiceFilter(typeof(GlobalExceptionFilter))]
         public async Task<ActionResult> Editar(TipoCuenta tipoCuenta)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(tipoCuenta);
+            }
+
             //Obtenemos el identificacdor de usuario
             var usuarioId = _usuariosServices.ObtenerUsuariosId();
             var tipoCuentaExiste = await _tiposCuentasServices.ObtenerPorId(tipoCuenta.Id, usuarioId);
@@ -102,7 +122,6 @@ namespace Presupuesto.Controllers
         }
 
         #endregion
-
 
         #region Eliminar 
         [ServiceFilter(typeof(GlobalExceptionFilter))]

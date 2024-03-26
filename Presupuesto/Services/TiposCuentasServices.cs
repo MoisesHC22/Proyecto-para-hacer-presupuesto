@@ -16,6 +16,7 @@ namespace Presupuesto.Services
         }
 
 
+        #region AccionesDB
         public async Task CrearAsync(TipoCuenta tipoCuenta)
         {
             using var connection = new SqlConnection(connectionString);
@@ -27,13 +28,48 @@ namespace Presupuesto.Services
 
         }
 
+        public async Task Actualizar(TipoCuenta tipoCuenta)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"UPDATE TiposCuentas SET
+                     Nombre=@Nombre WHERE Id = @Id", tipoCuenta);
+        }
+
+        public async Task Borrar(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync("DELETE TiposCuentas WHERE Id=@Id", new { id });
+        }
+
+        public async Task EditarAsync(TipoCuenta tipoCuenta)
+        {
+            using var connection = new SqlConnection(connectionString);
+            var id = await connection
+                .QuerySingleAsync<int>(@"UPDATE TiposCuentas SET
+                    Nombre = @Nombre WHERE Id = @Id ", tipoCuenta);
+
+        }
+
+
+        #endregion
+
+
+        #region Consultas 
+
+        public async Task<TipoCuenta> ObtenerPorId(int id, int usuarioId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT Id, Nombre, Orden
+                     FROM TiposCuentas WHERE Id=@Id AND UsuarioId=@UsuarioId", new { id, usuarioId });
+        }
+
         public async Task<bool> Existe(string nombre)
         {
             using var connection = new SqlConnection(connectionString);
             var existe = await connection
                 .QueryFirstOrDefaultAsync<int>(@"SELECT 1 FROM TiposCuentas
                      WHERE Nombre = @Nombre;",
-                     new { nombre});
+                     new { nombre });
             return existe == 1;
         }
 
@@ -51,13 +87,17 @@ namespace Presupuesto.Services
             return await connection.QueryAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas
                 Where Id = @Id", new { Id });
         }
-
+ 
         public async Task<IEnumerable<TipoCuenta>> TodosLosRegistros()
         {
             using var connection = new SqlConnection( connectionString);
             return await connection.QueryAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas", new { });
         }
 
+        #endregion
+
+
+        #region PaginaciónAnterior     
         public async Task<IEnumerable<TipoCuenta>> TodosLosRegistrosPaginados(int skip, int take)
         {
             using var connection = new SqlConnection(connectionString);
@@ -70,41 +110,25 @@ namespace Presupuesto.Services
             using var connection = new SqlConnection(connectionString);
             return await connection.ExecuteScalarAsync<int>(@"SELECT COUNT(*) FROM TiposCuentas");
         }
-
-        public async Task EditarAsync(TipoCuenta tipoCuenta)
-        {
-            using var connection = new SqlConnection(connectionString);
-            var id = await connection
-                .QuerySingleAsync<int>(@"UPDATE TiposCuentas SET
-                    Nombre = @Nombre WHERE Id = @Id ", tipoCuenta);
-
-        }
+        #endregion
 
 
-
-        //Funciones
-
-        public async Task<TipoCuenta> ObtenerPorId(int id, int usuarioId)
-        {
-            using var connection = new SqlConnection(connectionString);
-            return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT Id, Nombre, Orden
-                     FROM TiposCuentas WHERE Id=@Id AND UsuarioId=@UsuarioId", new { id,usuarioId });
-        }
-
-        public async Task Actualizar(TipoCuenta tipoCuenta)
+        #region Filtro 
+        public async Task<IEnumerable<TipoCuenta>> ObtenerListaFiltrada(int skip, int take, string searchValue)
         {
             using var connection = new SqlConnection( connectionString);
-            await connection.ExecuteAsync(@"UPDATE TiposCuentas SET
-                     Nombre=@Nombre WHERE Id = @Id", tipoCuenta);
+            var tiposCuentas = await connection.QueryAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas WHERE Nombre LIKE @SearchValue ORDER BY Id
+                        OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY", new { SearchValue = "%" + searchValue + "%", Skip = skip, Take = take });
+
+            return tiposCuentas;
         }
 
-
-
-        public async Task Borrar(int id)
+        public async Task<int> ObtenerTotalRegistrosFiltros(string searchValue)
         {
             using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync("DELETE TiposCuentas WHERE Id=@Id", new { id });
+            var totalRegistros = await connection.ExecuteScalarAsync<int>(@"SELECT COUNT(*) FROM TiposCuentas WHERE Nombre LIKE @SearchValue", new { SearchValue  = "%" + searchValue + "%"});
+            return totalRegistros;
         }
-
+        #endregion
     }
 }
